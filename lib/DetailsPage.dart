@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'models/Record.dart';
+import 'models/Account.dart';
 import 'helpers/URLLauncher.dart';
 
-class DetailPage extends StatelessWidget {
-  final Record record;
-  DetailPage({this.record});
+class DetailsPage extends StatelessWidget {
+  //final Account record;
+  //DetailPage({this.record});
+  var newTrxObject;
+  DetailsPage({this.newTrxObject});
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    /*return new Scaffold(
         appBar: new AppBar(
           title: new Text(record.name),
         ),
@@ -65,7 +67,7 @@ class DetailPage extends StatelessWidget {
                   )
               ),
             ]
-        )
-    );
+
+    );*/
   }
 }

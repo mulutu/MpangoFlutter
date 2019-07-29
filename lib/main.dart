@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'HomePage.dart';
 import 'LoginPage.dart';
+import 'CreateTransactionPage.dart';
 import 'helpers/Constants.dart';
 
 void main() => runApp(MpangoApp());
@@ -10,6 +11,7 @@ class MpangoApp extends StatelessWidget{
   final routes = <String, WidgetBuilder>{
     loginPageTag: (context) => LoginPage(),
     homePageTag: (context) => HomePage(),
+    createTransactionPageTag: (context) => CreateTransactionPage(),
   };
 
   @override
@@ -22,7 +24,7 @@ class MpangoApp extends StatelessWidget{
           primarySwatch: Colors.teal,
         ),
         home: LoginPage(),
-        routes: routes
+        routes: routes,
     );
   }
 

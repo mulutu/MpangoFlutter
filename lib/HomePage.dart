@@ -2,19 +2,11 @@ import 'package:flutter/material.dart';
 import 'helpers/Constants.dart';
 import 'models/Project.dart';
 import 'models/ProjectSummaryRecordList.dart';
-//import 'models/ProjectSummaryRecordService.dart';
-
-import 'models/Project.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'dart:io';
-import 'DonutPieChart.dart';
-import 'bottom-navbar-app.dart';
-
+import 'BottomNavigationBar.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class HomePage extends StatefulWidget {

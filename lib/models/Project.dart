@@ -3,9 +3,9 @@ import 'package:decimal/decimal.dart';
 
 
 class Project {
-  //int id;
-  //int UserId;
-  //int FarmId;
+  int id;
+  int UserId;
+  int FarmId;
   //String farmName;
   String ProjectName;
   //String DateCreated;
@@ -13,9 +13,9 @@ class Project {
   //double actualOutput;
   //int unitId;
   //String unitDescription;
-  //String Description;
-  double totalExpenses;
-  double totalIncomes;
+  String Description;
+  double totalExpenses =0.0;
+  double totalIncomes = 0.0;
 
   //double temp = weatherData['main']['temp'].toDouble();
   // I/flutter ( 4378): Exception: FormatException: Invalid date format
@@ -23,9 +23,9 @@ class Project {
   //I/flutter ( 4378): 10-03-2019
 
   Project({
-      //this.id,
-      //this.UserId,
-      //this.FarmId,
+      this.id,
+      this.UserId,
+      this.FarmId,
       //this.farmName,
       this.ProjectName,
       //this.DateCreated,
@@ -33,16 +33,16 @@ class Project {
       //this.actualOutput,
       //this.unitId,
       //this.unitDescription,
-      //this.Description,
+      this.Description,
       this.totalExpenses,
       this.totalIncomes
     });
 
   factory Project.fromJson(Map<String, dynamic> json) {
     return new Project(
-        //id: json['id'],
-        //UserId: json['userId'],
-        //FarmId: json['farmId'],
+        id: json['id'],
+        UserId: json['userId'],
+        FarmId: json['farmId'],
         //farmName: json['photo'],
         ProjectName: json['projectName'],
         //DateCreated: json['dateCreated'],
@@ -50,8 +50,8 @@ class Project {
         //actualOutput: double.parse(json['actualOutput']),
         //unitId: json['unitId'],
         //unitDescription: json['unitDescription'],
-        //Description: json['description'],
-        totalExpenses: json['totalExpeses'].toDouble(),
+        Description: json['description'],
+        totalExpenses:  json['totalExpeses'].toDouble(),
         totalIncomes: json['totalIncomes'].toDouble()
     );
   }

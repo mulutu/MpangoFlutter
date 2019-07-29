@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'bottom-navbar-bloc.dart';
+import 'helpers/BottomNavigationBarBloc.dart';
 import 'models/Project.dart';
-import 'models/ProjectSummaryRecordList.dart';
-
-import 'models/Project.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'models/Transaction.dart';
+import 'models/ListViewTransactions.dart';
+import 'CreateTransactionPage.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'dart:io';
-import 'DonutPieChart.dart';
-import 'bottom-navbar-app.dart';
-
+import 'package:unicorndial/unicorndial.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'helpers/Constants.dart';
+import 'CreateProjectPage.dart';
 
 class BottomNavBarApp extends StatefulWidget {
   createState() => _BottomNavBarAppState();
@@ -22,9 +19,16 @@ class BottomNavBarApp extends StatefulWidget {
 
 class _BottomNavBarAppState extends State<BottomNavBarApp> {
   BottomNavBarBloc _bottomNavBarBloc;
+  int _currentIndex = 0;
+  List<String> _titles;
 
   @override
   void initState() {
+    _titles = [
+      "Home",
+      "My Transactions",
+      "Settings",
+    ];
     super.initState();
     _bottomNavBarBloc = BottomNavBarBloc();
   }
@@ -37,26 +41,79 @@ class _BottomNavBarAppState extends State<BottomNavBarApp> {
 
   @override
   Widget build(BuildContext context) {
+
+    var childButtons = List<UnicornButton>();
+    childButtons.add(UnicornButton(
+        hasLabel: true,
+        labelText: "+ Expense",
+        currentButton: FloatingActionButton(
+          heroTag: "add_expense",
+          backgroundColor: Colors.redAccent,
+          mini: true,
+          child: Icon(Icons.train),
+          onPressed: () {
+            Transaction newTransaction =  new Transaction();
+            newTransaction.transactionTypeId=1;
+            Navigator.push(
+                context,
+                new MaterialPageRoute( builder: (context) => CreateTransactionPage(newTrxObject:newTransaction))
+            );
+          },
+        )));
+    childButtons.add(UnicornButton(
+        hasLabel: true,
+        labelText: "+ Income",
+        currentButton: FloatingActionButton(
+            heroTag: "add_income",
+            backgroundColor: Colors.greenAccent,
+            mini: true,
+            onPressed: () {
+              Transaction newTransaction =  new Transaction();
+              newTransaction.transactionTypeId=0;
+              Navigator.push(
+                  context,
+                  new MaterialPageRoute( builder: (context) => CreateTransactionPage(newTrxObject:newTransaction))
+              );
+            },
+            child: Icon(Icons.airplanemode_active))));
+    childButtons.add(UnicornButton(
+        hasLabel: true,
+        labelText: "+ Project",
+        currentButton: FloatingActionButton(
+            heroTag: "add_project",
+            backgroundColor: Colors.blueAccent,
+            mini: true,
+            onPressed: () {
+              Project newProject =  new Project();
+              Navigator.push(
+                  context,
+                  new MaterialPageRoute( builder: (context) => CreateProjectPage(newProjectObject:newProject))
+              );
+            },
+            child: Icon(Icons.directions_car))));
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Bottom NavBar Navigation'),
-      ),
+      appBar: new AppBar(title: new Text( _titles[_currentIndex] ),),
       body: StreamBuilder<NavBarItem>(
         stream: _bottomNavBarBloc.itemStream,
         initialData: _bottomNavBarBloc.defaultItem,
         builder: (BuildContext context, AsyncSnapshot<NavBarItem> snapshot) {
           switch (snapshot.data) {
             case NavBarItem.HOME:
-              //return _homeArea();
               return _buildBody(context);
             case NavBarItem.ALERT:
-              //return _alertArea();
-              return listSection(context);
+              return _buildTransactionList(context);
             case NavBarItem.SETTINGS:
               return _settingsArea();
           }
         },
       ),
+      floatingActionButton: UnicornDialer(
+          backgroundColor: Color.fromRGBO(255, 255, 255, 0.6),
+          parentButtonBackground: Colors.redAccent,
+          orientation: UnicornOrientation.VERTICAL,
+          parentButton: Icon(Icons.add),
+          childButtons: childButtons),
       bottomNavigationBar: StreamBuilder(
         stream: _bottomNavBarBloc.itemStream,
         initialData: _bottomNavBarBloc.defaultItem,
@@ -64,7 +121,11 @@ class _BottomNavBarAppState extends State<BottomNavBarApp> {
           return BottomNavigationBar(
             fixedColor: Colors.blueAccent,
             currentIndex: snapshot.data.index,
-            onTap: _bottomNavBarBloc.pickItem,
+            //onTap: _bottomNavBarBloc.pickItem,
+            onTap: (int index) {
+              setState(() { this._currentIndex = index; } );
+              _bottomNavBarBloc.pickItem(index);
+            },
             items: [
               BottomNavigationBarItem(
                 title: Text('Home'),
@@ -83,6 +144,13 @@ class _BottomNavBarAppState extends State<BottomNavBarApp> {
         },
       ),
     );
+  }
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+    _bottomNavBarBloc.pickItem;
   }
 
   ///////////// Home page ////////////
@@ -105,7 +173,6 @@ class _BottomNavBarAppState extends State<BottomNavBarApp> {
     return compute(parseProjects, response.body);
   }
 
-  // A function that converts a response body into a List<Photo>.
   static List<Project> parseProjects(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed.map<Project>((json) => Project.fromJson(json)).toList();
@@ -119,7 +186,7 @@ class _BottomNavBarAppState extends State<BottomNavBarApp> {
           height: 202.0,
           child: Container(
             child: PageView(
-              reverse: true,
+              reverse: false,
               controller: pageController,
               scrollDirection: true ? Axis.horizontal : Axis.vertical,
               pageSnapping: true,
@@ -130,7 +197,6 @@ class _BottomNavBarAppState extends State<BottomNavBarApp> {
           ),
         )
       ],
-      //children: <Widget>[_topSection, listSection],
     );
   }
 
@@ -214,51 +280,29 @@ class _BottomNavBarAppState extends State<BottomNavBarApp> {
   }
 
   ///////// Transactions ///////////
-  String url_transactions = "http://45.56.73.81:8084/Mpango/api/v1/users/1/projects/summary";
-  static final titles = [
-    'bike',
-    'boat',
-    'bus',
-    'car',
-    'railway',
-    'run',
-    'subway',
-    'transit',
-    'walk'
-  ];
-  static final icons = [
-    Icons.directions_bike,
-    Icons.directions_boat,
-    Icons.directions_bus,
-    Icons.directions_car,
-    Icons.directions_railway,
-    Icons.directions_run,
-    Icons.directions_subway,
-    Icons.directions_transit,
-    Icons.directions_walk
-  ];
+  List data;
+  String url_transactions = "http://45.56.73.81:8084/Mpango/api/v1/users/1/transactions";
+  Future<List<Transaction>> fetchTransactions() async {
+    final response = await http.get(url_transactions);
+    return compute(parseTransactions, response.body);
+  }
 
-  ///
+  // A function that converts a response body into a List<Photo>.
+  static List<Transaction> parseTransactions(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<Transaction>((json) => Transaction.fromJson(json)).toList();
+  }
 
-  Widget listSection(BuildContext context){
-    return Column(
-        children:<Widget>[
-          new Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemCount: titles.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  child: ListTile(
-                    leading: Icon(icons[index]),
-                    title: Text(titles[index]),
-                  ),
-                );
-              },
-            ),
-          )
-        ]
+  Widget _buildTransactionList(BuildContext context){
+    return FutureBuilder<List<Transaction>>(
+        future: fetchTransactions(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+
+          return snapshot.hasData
+              ? ListViewTransactions(transactions: snapshot.data)
+              : Center(child: CircularProgressIndicator());
+        }
     );
   }
 
@@ -287,4 +331,11 @@ class LinearSales {
   LinearSales(this.year, this.sales, Color color)
       : this.color = charts.Color(
       r: color.red, g: color.green, b: color.blue, a: color.alpha);
+}
+
+class Choice {
+  const Choice({ this.title, this.icon, this.color});
+  final String title;
+  final IconData icon;
+  final num color;
 }
