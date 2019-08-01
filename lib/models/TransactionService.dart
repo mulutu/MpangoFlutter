@@ -3,13 +3,24 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'ServiceResponse.dart';
-
 import 'Transaction.dart';
+import 'package:flutter/foundation.dart';
 
 class TransactionService {
-  //static const _serviceUrl = 'http://mockbin.org/echo';
+
+  /////////// FETCH PROJECTS /////////////////
+  static const _serviceUrlGetUserTransactions = "http://45.56.73.81:8084/Mpango/api/v1/users/1/transactions";
   static const _serviceUrl = "http://45.56.73.81:8084/Mpango/api/v1/transactions";
   static final _headers = {'Content-Type': 'application/json'};
+
+  static Future<List<Transaction>> fetchTransactions() async {
+    final response = await http.get(_serviceUrlGetUserTransactions, headers: _headers,);
+    return compute(parseTransactions, response.body);
+  }
+  static List<Transaction> parseTransactions(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<Transaction>((json) => Transaction.fromJson(json)).toList();
+  }
 
   Future<ServiceResponse> createTransaction(Transaction transaction) async {
     print('Posting date : ${transaction.transactionDate}');

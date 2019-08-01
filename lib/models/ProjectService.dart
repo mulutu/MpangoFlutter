@@ -16,13 +16,19 @@ class ProjectService {
   static const _serviceUrlCreateProject = "http://45.56.73.81:8084/Mpango/api/v1/projects";
   static final _headers = {'Content-Type': 'application/json'};
 
-
   /////////// FETCH PROJECTS /////////////////
+  static Future<List<Project>> fetchProjects_static() async {
+    final response = await http.get(_serviceUrlGetUserProjects, headers: _headers,);
+    print('response.body : ${response.body}');
+    return compute(parseProjects, response.body);
+  }
+
   Future<List<Project>> fetchProjects() async {
     final response = await http.get(_serviceUrlGetUserProjects, headers: _headers,);
     print('response.body : ${response.body}');
     return compute(parseProjects, response.body);
   }
+
   static List<Project> parseProjects(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed.map<Project>((json) => Project.fromJson(json)).toList();

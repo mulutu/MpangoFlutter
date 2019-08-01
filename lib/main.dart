@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'HomePage.dart';
 import 'LoginPage.dart';
+import 'TasksPage.dart';
 import 'CreateTransactionPage.dart';
 import 'helpers/Constants.dart';
 
@@ -12,6 +13,7 @@ class MpangoApp extends StatelessWidget{
     loginPageTag: (context) => LoginPage(),
     homePageTag: (context) => HomePage(),
     createTransactionPageTag: (context) => CreateTransactionPage(),
+    userTasksPageTag: (context) => TasksPage(),
   };
 
   @override

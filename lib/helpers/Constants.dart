@@ -20,3 +20,4 @@ const buttonHeight = 24.0;
 const loginPageTag = 'Login Page';
 const homePageTag = 'Home Page';
 const createTransactionPageTag = 'Create Transaction Page';
+const userTasksPageTag = 'User Tasks Page';
