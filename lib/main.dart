@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'HomePage.dart';
-import 'LoginPage.dart';
+import 'ui/LoginPage.dart';
 import 'TasksPage.dart';
 import 'CreateTransactionPage.dart';
 import 'helpers/Constants.dart';

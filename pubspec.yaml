@@ -30,6 +30,7 @@ dependencies:
   unicorndial: ^1.1.5
   datetime_picker_formfield: ^0.1.8
   json_annotation: ^2.0.0
+  font_awesome_flutter: ^8.0.1
 
 
 dev_dependencies:
@@ -38,6 +39,8 @@ dev_dependencies:
 
   flutter_test:
     sdk: flutter
+
+  font_awesome_flutter: ^8.0.1
 
 
 
@@ -88,3 +91,17 @@ flutter:
   assets:
       - assets/images/flutter-logo-round.png
       - assets/data/records.json
+      - assets/login_logo.png
+
+  fonts:
+      - family: WorkSansSemiBold
+        fonts:
+          - asset: assets/fonts/Work_Sans/WorkSans-SemiBold.ttf
+
+      - family: WorkSansBold
+        fonts:
+          - asset: assets/fonts/Work_Sans/WorkSans-Bold.ttf
+
+      - family: WorkSansMedium
+        fonts:
+          - asset: assets/fonts/Work_Sans/WorkSans-Medium.ttf
