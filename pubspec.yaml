@@ -31,6 +31,10 @@ dependencies:
   datetime_picker_formfield: ^0.1.8
   json_annotation: ^2.0.0
   font_awesome_flutter: ^8.0.1
+  liquid_pull_to_refresh: ^1.1.1
+  flutter_native_timezone: ^1.0.4
+  sliver_calendar: ^0.2.0
+  timezone: ^0.5.4
 
 
 dev_dependencies:
@@ -92,6 +96,11 @@ flutter:
       - assets/images/flutter-logo-round.png
       - assets/data/records.json
       - assets/login_logo.png
+
+      - assets/timezone/2018c.tzf
+      #- assets/timezone/2019a.tzf
+      - assets/images/calendarbanner.jpg
+      - assets/images/calendarheader.png
 
   fonts:
       - family: WorkSansSemiBold

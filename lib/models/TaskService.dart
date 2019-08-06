@@ -20,6 +20,11 @@ class TaskService {
     print('response.body : ${response.body}');
     return compute(parseTasks, response.body);
   }
+  Future<List<Task>> fetchTasks2() async {
+    final response = await http.get(_serviceUrl, headers: _headers,);
+    print('response.body : ${response.body}');
+    return compute(parseTasks, response.body);
+  }
   static List<Task> parseTasks(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed.map<Task>((json) => Task.fromJson(json)).toList();
