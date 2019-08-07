@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'models/TaskService.dart';
 import 'models/Task.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'FloatingButtonsProjects.dart';
 import 'package:sliver_calendar/sliver_calendar.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/timezone.dart';
 import 'dart:math';
+import 'package:intl/intl.dart';
+
+
+
 
 class TasksPage extends StatefulWidget {
   createState() => _TasksPageState();
@@ -21,16 +27,18 @@ class _TasksPageState extends State<TasksPage> {
   // get all teh tasks
   _getTasksRecords() async {
     List<Task> tasks_ = await TaskService().fetchTasks2();
+    print('TASKS: ${tasks_.length}');
     setState(() {
       for (Task record in tasks_) {
         this.tasks.add(record);
+        print('TASKS: task name ${record.taskName} == ${record.taskDate}');
       }
     });
   }
 
 
   @override
-  List<CalendarEvent> getEvents(DateTime start, DateTime end) {
+  List<CalendarEvent> getEvents__(DateTime start, DateTime end) {
     if (loc != null && events.length == 0) {
       TZDateTime nowTime = new TZDateTime.now(loc).subtract(new Duration(days: 5));
       for (int i = 0; i < 20; i++) {
@@ -45,21 +53,44 @@ class _TasksPageState extends State<TasksPage> {
   }
 
   @override
-  List<CalendarEvent> getEvents__(DateTime start, DateTime end) {
+  List<CalendarEvent> getEvents(DateTime start, DateTime end) {
+    if (loc != null && events.length == 0) {
+      TZDateTime nowTime = new TZDateTime.now(loc).subtract(new Duration(days: 5));
+      for (int i = 0; i < tasks.length; i++) {
+        TZDateTime start = nowTime.add(new Duration(days: i + random.nextInt(10)));
+        events.add(new CalendarEvent(
+            index: i,
+            instant: start,
+            instantEnd: start.add(new Duration(minutes: 30))));
+      }
+    }
+    return events;
+  }
+
+  @override
+  List<CalendarEvent> getEvents_x(DateTime start, DateTime end) {
     if (tasks == null) {
       _getTasksRecords();
     }
     if (tasks == null) {
       return [];
     }
-    List<CalendarEvent> events = new List<CalendarEvent>();
+    print('TASKS getEvents: ${tasks.length}');
+    //List<CalendarEvent> events = new List<CalendarEvent>();
     int pos = 0;
-    tasks.forEach((Task g) => events.add(new CalendarEvent( instant: g.taskDate, instantEnd: g.taskDate.add(new Duration(minutes: 30)), index: pos++)));
+    tasks.forEach((Task g) => events.add(new CalendarEvent(
+          instant: start,
+          instantEnd: start.add(new Duration(minutes: 30)),
+          index: pos++
+        )
+      )
+    );
     return events;
   }
 
   @override
   void initState() {
+    super.initState();
     _getTasksRecords();
     /*_listening = UserDatabaseData.instance.gameStream.listen((UpdateReason r) {
       _listToShow = UserDatabaseData.instance.games.values.toList();
@@ -99,11 +130,11 @@ class _TasksPageState extends State<TasksPage> {
                 TZDateTime nowTime = new TZDateTime.now(loc);
                 return new Expanded(
                   child: new CalendarWidget(
-                    initialDate: nowTime,
-                    //initialDate: new TZDateTime.now(local),
-                    beginningRangeDate: nowTime.subtract(new Duration(days: 31)),
-                    endingRangeDate: nowTime.add(new Duration(days: 31)),
-                    location: loc,
+                    //initialDate: nowTime,
+                    initialDate: new TZDateTime.now(local),
+                    //beginningRangeDate: nowTime.subtract(new Duration(days: 31)),
+                    //endingRangeDate: nowTime.add(new Duration(days: 31)),
+                    //location: loc,
                     buildItem: buildItem,
                     getEvents: getEvents,
                     bannerHeader: new AssetImage("assets/images/calendarheader.png"),
@@ -127,10 +158,12 @@ class _TasksPageState extends State<TasksPage> {
 
 
   Widget buildItem(BuildContext context, CalendarEvent e) {
+
+    var date = DateFormat.yMd().format(tasks[e.index].taskDate);
     return new Card(
       child: new ListTile(
-        title: new Text("Event ${e.index}"),
-        subtitle: new Text("Yay for events"),
+        title: new Text("${date}"),
+        subtitle: new Text("${tasks[e.index].taskName}"),
         leading: const Icon(Icons.gamepad),
       ),
     );
