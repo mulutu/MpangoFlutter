@@ -33,9 +33,9 @@ class TransactionsPage extends StatelessWidget {
       padding: const EdgeInsets.all(5),
 
       // test on pull function
-      child: LiquidPullToRefresh(
+      //child: LiquidPullToRefresh(
         //key: _refreshIndicatorKey,	// key if you want to add
-        onRefresh: null,	// refresh callback
+        //onRefresh: null,	// refresh callback
 
         child: ListView.builder(
           itemCount: transactions.length,
@@ -77,7 +77,7 @@ class TransactionsPage extends StatelessWidget {
         ),
 
 
-      ) // test on pull function
+      //) // test on pull function
 
 
     );

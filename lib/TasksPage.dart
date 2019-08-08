@@ -12,7 +12,6 @@ import 'package:intl/intl.dart';
 
 
 
-
 class TasksPage extends StatefulWidget {
   createState() => _TasksPageState();
 }
@@ -22,107 +21,56 @@ class _TasksPageState extends State<TasksPage> {
   List<CalendarEvent> events = <CalendarEvent>[];
   List<Task> tasks = <Task>[];
   Location loc;
-  Random random = new Random();
 
-  // get all teh tasks
-  _getTasksRecords() async {
-    List<Task> tasks_ = await TaskService().fetchTasks2();
+  Future<void> _getTasksRecords() async {
+    Iterable<Task> tasks_ = await TaskService().fetchTasks2();
     print('TASKS: ${tasks_.length}');
-    setState(() {
-      for (Task record in tasks_) {
-        this.tasks.add(record);
-        print('TASKS: task name ${record.taskName} == ${record.taskDate}');
-      }
-    });
+    setTasks(tasks_);
   }
 
-
-  @override
-  List<CalendarEvent> getEvents__(DateTime start, DateTime end) {
-    if (loc != null && events.length == 0) {
-      TZDateTime nowTime = new TZDateTime.now(loc).subtract(new Duration(days: 5));
-      for (int i = 0; i < 20; i++) {
-        TZDateTime start = nowTime.add(new Duration(days: i + random.nextInt(10)));
-        events.add(new CalendarEvent(
-            index: i,
-            instant: start,
-            instantEnd: start.add(new Duration(minutes: 30))));
-      }
-    }
-    return events;
+  void setTasks(Iterable<Task> res) {
+    List<Task> games = res.toList();
+    games.sort((a, b) => a.taskDate.compareTo(b.taskDate));
+    tasks = games;
   }
 
   @override
   List<CalendarEvent> getEvents(DateTime start, DateTime end) {
-    if (loc != null && events.length == 0) {
-      TZDateTime nowTime = new TZDateTime.now(loc).subtract(new Duration(days: 5));
-      for (int i = 0; i < tasks.length; i++) {
-        TZDateTime start = nowTime.add(new Duration(days: i + random.nextInt(10)));
-        events.add(new CalendarEvent(
-            index: i,
-            instant: start,
-            instantEnd: start.add(new Duration(minutes: 30))));
-      }
-    }
-    return events;
-  }
-
-  @override
-  List<CalendarEvent> getEvents_x(DateTime start, DateTime end) {
     if (tasks == null) {
       _getTasksRecords();
     }
     if (tasks == null) {
       return [];
     }
-    print('TASKS getEvents: ${tasks.length}');
-    //List<CalendarEvent> events = new List<CalendarEvent>();
-    int pos = 0;
-    tasks.forEach((Task g) => events.add(new CalendarEvent(
-          instant: start,
-          instantEnd: start.add(new Duration(minutes: 30)),
-          index: pos++
-        )
-      )
-    );
+    if (events.length == 0) {
+      for (int i = 0; i < tasks.length; i++) {
+        events.add(new CalendarEvent(
+            index: i,
+            instant: new TZDateTime.from(tasks[i].taskDate, local),
+            instantEnd: new TZDateTime.from(tasks[i].taskDate, local).add(new Duration(minutes: 1))
+          )
+        );
+      }
+    }
     return events;
   }
+
 
   @override
   void initState() {
     super.initState();
     _getTasksRecords();
-    /*_listening = UserDatabaseData.instance.gameStream.listen((UpdateReason r) {
-      _listToShow = UserDatabaseData.instance.games.values.toList();
-      state.updateEvents();
-    });*/
   }
 
-  /*@override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: new AppBar(title: new Text( 'Tasks' ),),
-      body: FutureBuilder<List<Task>>(
-        future: TaskService.fetchTasks(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
-          return snapshot.hasData
-            ? ListViewTasks_(tasks: snapshot.data)
-            : Center(child: CircularProgressIndicator());
-        }
-      ),
-      floatingActionButton: FloatingButtonsProjects(),
-      resizeToAvoidBottomPadding: false,
-    );
-  }*/
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(title: new Text( 'Tasks' ),),
+      //appBar: new AppBar(title: new Text( 'Tasks' ),),
       body: new Column(
         children: <Widget>[
           FutureBuilder<String>(
+            //future: TaskService.fetchTasks(), //FlutterNativeTimezone.getLocalTimezone(),
             future: FlutterNativeTimezone.getLocalTimezone(),
             builder: (BuildContext context, AsyncSnapshot<String> tz) {
               if (tz.hasData) {
@@ -130,10 +78,10 @@ class _TasksPageState extends State<TasksPage> {
                 TZDateTime nowTime = new TZDateTime.now(loc);
                 return new Expanded(
                   child: new CalendarWidget(
-                    //initialDate: nowTime,
-                    initialDate: new TZDateTime.now(local),
-                    //beginningRangeDate: nowTime.subtract(new Duration(days: 31)),
-                    //endingRangeDate: nowTime.add(new Duration(days: 31)),
+                    initialDate: nowTime,
+                    //initialDate: new TZDateTime.now(local),
+                    //beginningRangeDate: nowTime.subtract(new Duration(days: 62)),
+                    //endingRangeDate: nowTime.add(new Duration(days: 62)),
                     //location: loc,
                     buildItem: buildItem,
                     getEvents: getEvents,
@@ -144,7 +92,8 @@ class _TasksPageState extends State<TasksPage> {
                 );
               } else {
                 return new Center(
-                  child: new Text("Getting the timezone..."),
+                  //child: new Text("Getting the timezone..."),
+                  child: CircularProgressIndicator(),
                 );
               }
             }
@@ -156,9 +105,7 @@ class _TasksPageState extends State<TasksPage> {
     );
   }
 
-
   Widget buildItem(BuildContext context, CalendarEvent e) {
-
     var date = DateFormat.yMd().format(tasks[e.index].taskDate);
     return new Card(
       child: new ListTile(
@@ -168,10 +115,6 @@ class _TasksPageState extends State<TasksPage> {
       ),
     );
   }
-
-
-
-
 
   Widget ListViewTasks_({List<Task> tasks}) {
     return Container(

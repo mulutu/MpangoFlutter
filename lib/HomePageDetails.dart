@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'helpers/BottomNavigationBarBloc.dart';
 import 'TransactionsPage.dart';
-import 'ProjectsPage.dart';
+import 'TasksPage.dart';
 import 'DrawerNormal.dart';
 import 'HomePagePieChart.dart';
 import 'package:flutter/gestures.dart' show DragStartBehavior;
@@ -20,7 +20,7 @@ class _HomePageDetailsState extends State<HomePageDetails> {
 
   @override
   void initState() {
-    _titles = [ "Home", "Transactions", "Projects" ];
+    _titles = [ "Home", "Transactions", "Tasks" ];
     super.initState();
     _bottomNavBarBloc = BottomNavBarBloc();
   }
@@ -47,8 +47,8 @@ class _HomePageDetailsState extends State<HomePageDetails> {
               return HomePagePieChart();
             case NavBarItem.ALERT:
               return TransactionsPage();
-            case NavBarItem.PROJECTS:
-              return ProjectsPage();
+            case NavBarItem.TASKS:
+              return TasksPage();
           }
         },
       ),
@@ -74,8 +74,8 @@ class _HomePageDetailsState extends State<HomePageDetails> {
                 icon: Icon(Icons.notifications),
               ),
               BottomNavigationBarItem(
-                title: Text('Projects'),
-                icon: Icon(Icons.pan_tool),
+                title: Text('Tasks'),
+                icon: Icon(Icons.calendar_today),
               ),
             ],
           );
