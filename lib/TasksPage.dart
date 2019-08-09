@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'models/TaskService.dart';
 import 'models/Task.dart';
 import 'dart:async';
-import 'package:http/http.dart' as http;
 import 'FloatingButtonsProjects.dart';
 import 'package:sliver_calendar/sliver_calendar.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/timezone.dart';
-import 'dart:math';
 import 'package:intl/intl.dart';
-
-
 
 class TasksPage extends StatefulWidget {
   createState() => _TasksPageState();
@@ -24,7 +20,6 @@ class _TasksPageState extends State<TasksPage> {
 
   Future<void> _getTasksRecords() async {
     Iterable<Task> tasks_ = await TaskService().fetchTasks2();
-    print('TASKS: ${tasks_.length}');
     setTasks(tasks_);
   }
 
@@ -42,12 +37,12 @@ class _TasksPageState extends State<TasksPage> {
     if (tasks == null) {
       return [];
     }
-    if (events.length == 0) {
+    if (loc!=null && events.length == 0) {
       for (int i = 0; i < tasks.length; i++) {
         events.add(new CalendarEvent(
             index: i,
-            instant: new TZDateTime.from(tasks[i].taskDate, local),
-            instantEnd: new TZDateTime.from(tasks[i].taskDate, local).add(new Duration(minutes: 1))
+            instant: new TZDateTime.from(tasks[i].taskDate, loc),
+            instantEnd: new TZDateTime.from(tasks[i].taskDate, loc).add(new Duration(minutes: 30))
           )
         );
       }
@@ -106,12 +101,15 @@ class _TasksPageState extends State<TasksPage> {
   }
 
   Widget buildItem(BuildContext context, CalendarEvent e) {
+    var taskName = tasks[e.index].taskName;
+    var taskDesc = tasks[e.index].description;
     var date = DateFormat.yMd().format(tasks[e.index].taskDate);
     return new Card(
       child: new ListTile(
-        title: new Text("${date}"),
-        subtitle: new Text("${tasks[e.index].taskName}"),
+        title: new Text("${taskName}", style: TextStyle(color: Colors.black, fontSize: 16.0, fontFamily: "WorkSansBold"),),
+        subtitle: new Text("${taskDesc}"),
         leading: const Icon(Icons.gamepad),
+        trailing: Icon(Icons.keyboard_arrow_right),
       ),
     );
   }

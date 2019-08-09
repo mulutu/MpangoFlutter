@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'models/Account.dart';
-import 'helpers/URLLauncher.dart';
 
 class DetailsPage extends StatelessWidget {
   //final Account record;
@@ -10,6 +8,7 @@ class DetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return null;
     /*return new Scaffold(
         appBar: new AppBar(
           title: new Text(record.name),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'models/Project.dart';
 import 'models/ProjectService.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter_swiper/flutter_swiper.dart';
 
 class HomePagePieChart extends StatelessWidget {
   HomePagePieChart();
@@ -122,30 +121,6 @@ class HomePagePieChart extends StatelessWidget {
       ),
     ),
   );
-
-
-
-  final pieCharts_ = Container(
-    child: Swiper(
-      itemBuilder: (BuildContext context,int index){
-        return new Image.network("http://via.placeholder.com/350x150",fit: BoxFit.fill,);
-      },
-      itemCount: 3,
-      pagination: new SwiperPagination(),
-      control: new SwiperControl(),
-    )
-  );
-
-  static ProjectsList_({List<Project> projects, BuildContext context}) {
-    return new Swiper(
-      itemBuilder: (BuildContext context,int index){
-        return new Image.network("http://via.placeholder.com/350x150",fit: BoxFit.fill,);
-      },
-      itemCount: 3,
-      pagination: new SwiperPagination(),
-      control: new SwiperControl(),
-    );
-  }
 
   final pieCharts = FutureBuilder<List<Project>>(
       future: ProjectService().fetchProjects(), //fetchProjects(),
