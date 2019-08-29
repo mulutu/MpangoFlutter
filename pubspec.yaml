@@ -36,6 +36,8 @@ dependencies:
   sliver_calendar: ^0.2.0
   timezone: ^0.5.4
   flutter_swiper : ^1.1.6
+  grouped_buttons: ^1.0.4
+
 
 
 dev_dependencies:

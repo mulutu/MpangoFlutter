@@ -10,6 +10,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'models/ProjectService.dart';
 import 'models/ChartOfAccountsService.dart';
+import 'ui/SelectProject.dart';
 
 class CreateTransactionPage extends StatefulWidget {
   var newTrxObject;
@@ -138,7 +139,29 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
                 validator: (val) => val.isEmpty ? 'Amount is required' : null,
                 onSaved: (val) => newTransaction.amount = double.parse(val), // as double,
               ),
-              new FormField(
+              InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      new MaterialPageRoute(builder: (context) => new SelectProject(newTrxObj:newTransaction)),
+                    );
+                  },
+                  child: IgnorePointer(
+                    child: new TextFormField(
+                      decoration: const InputDecoration(
+                        icon: const Icon(Icons.calendar_today),
+                        hintText: 'Select Project',
+                        labelText: 'Select Project',
+                      ),
+                      keyboardType: TextInputType.text,
+                      controller: _controller,
+                      //validator: (val) => isValidDob(val) ? null : 'Not a valid name',
+                      //onSaved: (val) => newTransaction.transactionDate = new DateFormat("yyyy-MM-dd").parse(val), // as double,
+                      //onSaved: (val) => newTransaction.transactionDate = new DateFormat.yMd().parse(val),
+                    ),
+                  )
+              ),
+              /*new FormField(
                   builder: (FormFieldState state) {
                     if( projectsList != null){
                       return InputDecorator(
@@ -165,7 +188,7 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
                       );
                     }
                 }
-              ),
+              ),*/
               new FormField(
                   builder: (FormFieldState state) {
                     if( accountsList != null){
