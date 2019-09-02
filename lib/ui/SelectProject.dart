@@ -3,6 +3,7 @@ import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:mpango/models/Project.dart';
 import 'package:mpango/models/ProjectService.dart';
 import 'package:mpango/models/Transaction.dart';
+import 'package:mpango/CreateTransactionPage.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mpango/style/theme.dart' as Theme;
@@ -131,7 +132,7 @@ class _SelectProjectState extends State<SelectProject>{
 
       Navigator.push(
           context,
-          new MaterialPageRoute( builder: (context) => CreateTransactionPage(newTrxObject:newTransaction, selectedProjects: _checkedId))
+          new MaterialPageRoute( builder: (context) => CreateTransactionPage(newTrxObject:newTransaction, ))
       );
 
       //var transactionService = new TransactionService();
