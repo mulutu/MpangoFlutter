@@ -4,11 +4,7 @@ import 'package:mpango/models/Project.dart';
 import 'package:mpango/models/ProjectService.dart';
 import 'package:mpango/models/Transaction.dart';
 import 'package:mpango/CreateTransactionPage.dart';
-import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mpango/style/theme.dart' as Theme;
-import 'package:mpango/utils/bubble_indication_painter.dart';
-import 'package:mpango/helpers/Constants.dart';
+
 
 class SelectProject extends StatefulWidget {
   var newTrxObj;
@@ -116,7 +112,10 @@ class _SelectProjectState extends State<SelectProject>{
         }
       }
 
+      newTransaction.selectedProjects = _checkedId;
+
       print("checked projects IDS: ${_checkedId.toString()}");
+      print("TRX checked projects IDS: ${newTransaction.selectedProjects.toString()}");
 
       print('Form save called, newContact is now up to date...');
       //print('Amount: ${newTransaction.amount}');
@@ -130,10 +129,12 @@ class _SelectProjectState extends State<SelectProject>{
       print('Submitting to back end...');
       print('TODO - we will write the submission part next...');
 
-      Navigator.push(
+      Navigator.pop(context, newTransaction);
+
+      /*Navigator.push(
           context,
           new MaterialPageRoute( builder: (context) => CreateTransactionPage(newTrxObject:newTransaction, ))
-      );
+      );*/
 
       //var transactionService = new TransactionService();
       //transactionService.createTransaction(newTransaction)

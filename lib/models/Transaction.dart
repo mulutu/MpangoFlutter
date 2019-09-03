@@ -15,6 +15,7 @@ class Transaction{
   DateTime transactionDate;
   int projectId;
   String projectName;
+  List<int> selectedProjects = <int>[];
 
   Transaction({
     this.userId,
@@ -25,6 +26,7 @@ class Transaction{
     this.transactionDate,
     this.projectId,
     this.projectName,
+    this.selectedProjects,
   });
 
   //Transaction.empty(); contact.dob = new DateFormat.yMd().parseStrict(map['dob']);
@@ -42,6 +44,7 @@ class Transaction{
         //transactionDate: formatter.format(dateTimeFromString(json['transactionDate'].),//new DateFormat.yMd().parseStrict(json['transactionDate']),
         projectId: json['projectId'],
         projectName: json['projectName'],
+        //selectedProjects: json['selectedProjects'],
     );
   }
 
