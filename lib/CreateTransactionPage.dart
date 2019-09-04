@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'models/ProjectService.dart';
 import 'models/ChartOfAccountsService.dart';
 import 'ui/SelectProject.dart';
+import 'ui/SelectDate.dart';
 
 class CreateTransactionPage extends StatefulWidget {
   var newTrxObject;
@@ -33,6 +34,7 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
   Transaction newTransaction =  new Transaction();
 
   final TextEditingController _controllerProjects = new TextEditingController();
+  final TextEditingController _controllerDate = new TextEditingController();
 
   String pageTitle = "";
 
@@ -230,7 +232,8 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
               ),
               InkWell(
                   onTap: () {
-                    _chooseDate(context, _controller.text);
+                    //_chooseDate(context, _controller.text);
+                    _awaitReturnValueFromSelectDateScreen(context);
                   },
                 child: IgnorePointer(
                     child: new TextFormField(
@@ -240,7 +243,7 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
                         labelText: 'Date',
                       ),
                       keyboardType: TextInputType.datetime,
-                      controller: _controller,
+                      controller: _controllerDate,
                       validator: (val) => isValidDob(val) ? null : 'Not a valid date',
                       //onSaved: (val) => newTransaction.transactionDate = new DateFormat("yyyy-MM-dd").parse(val), // as double,
                       onSaved: (val) => newTransaction.transactionDate = new DateFormat.yMd().parse(val),
@@ -271,6 +274,22 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
         )
       )
     );
+  }
+
+  void _awaitReturnValueFromSelectDateScreen(BuildContext context) async {
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SelectDate(newTrxObj:newTransaction),
+        ));
+    // after the SecondScreen result comes back update the Text widget with it
+    setState(() {
+      newTransaction = result;
+      _controllerDate.text = newTransaction.transactionDate.toString();
+    });
+
+    print("CREATETRX TRX checked projects IDS: ${newTransaction.transactionDate.toString()}");
+
   }
 
   void _awaitReturnValueFromSelectProjectScreen(BuildContext context) async {
