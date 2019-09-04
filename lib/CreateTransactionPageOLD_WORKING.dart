@@ -18,6 +18,12 @@ class CreateTransactionPage extends StatefulWidget {
   var newTrxObject;
   CreateTransactionPage({ this.newTrxObject  });
 
+  /*CreateTransactionPage(this.newTrxObject) {
+    if (newTrxObject == null) {
+      throw ArgumentError("member of MemberWidget cannot be null. Received: '$newTrxObject'");
+    }
+  }*/
+
   @override
   _CreateTransactionState createState() => new _CreateTransactionState();
 }
@@ -36,10 +42,10 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
 
   Project projectObj;
   List<Project> projectsList = <Project>[];
-  //String _projectName = '';
+  String _projectName = '';
 
   List<Account> accountsList = <Account>[];
-  //String _accountName = '';
+  String _accountName = '';
   Account accountObj;
 
   _getProjectsRecords() async {
@@ -68,6 +74,8 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
     super.initState();
     newTransaction = widget.newTrxObject;
     newTransaction.userId = 1;
+    //newTransaction.accountId = 3;
+    //newTransaction.transactionTypeId = 1;
     _getProjectsRecords();
     _getAccountsRecords();
 
@@ -76,6 +84,38 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
     }else{
       pageTitle = "New Expense";
     }
+  }
+
+
+
+  final TextEditingController _controller = new TextEditingController();
+  Future _chooseDate(BuildContext context, String initialDateString) async {
+    var now = new DateTime.now();
+    var initialDate = convertToDate(initialDateString) ?? now;
+    initialDate = (initialDate.year >= 1900 && initialDate.isBefore(now) ? initialDate : now);
+
+    var result = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: new DateTime(1900),
+        lastDate: new DateTime.now(),
+        builder: (BuildContext context, Widget child) {
+          return FittedBox(
+            child: Theme(
+              child: child,
+              data: ThemeData(
+                primaryColor: Colors.purple[300],
+              ),
+            ),
+          );
+        }
+    );
+
+    if (result == null) return;
+
+    setState(() {
+      _controller.text = new DateFormat.yMd().format(result);
+    });
   }
 
   DateTime convertToDate(String input) {
@@ -140,6 +180,10 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
               InkWell(
                   onTap: () {
                     _awaitReturnValueFromSelectAccountScreen(context);
+                    /*Navigator.push(
+                    context,
+                    new MaterialPageRoute(builder: (context) => new SelectProject(newTrxObj:newTransaction)),
+                  );*/
                   },
                   child: IgnorePointer(
                     child: new TextFormField(
@@ -158,6 +202,61 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
                     ),
                   )
               ),
+              /*new FormField(
+                  builder: (FormFieldState state) {
+                    if( projectsList != null){
+                      return InputDecorator(
+                          decoration: InputDecoration(  icon: const Icon(Icons.color_lens),  labelText: 'Select Project',  ),
+                          isEmpty: _projectName == '',
+                          child: new DropdownButtonHideUnderline(
+                              child: new DropdownButton<Project>(
+                                value: projectObj,
+                                isDense: true,
+                                onChanged: (Project newValue) {
+                                  setState(() {
+                                    projectObj = newValue;
+                                    _projectName = newValue.ProjectName;
+                                    //newTransaction.projectId = _userProjects.records.indexOf(newValue);
+                                    newTransaction.projectId = newValue.id;
+                                    state.didChange(newValue.ProjectName);
+                                  });
+                                },
+                                items: projectsList.map((Project project) {
+                                  return new DropdownMenuItem<Project>( value: project, child: new Text(project.ProjectName),  );
+                                }).toList(),
+                              )
+                          )
+                      );
+                    }
+                }
+              ),*/
+              /*new FormField(
+                  builder: (FormFieldState state) {
+                    if( accountsList != null){
+                      return InputDecorator(
+                          decoration: InputDecoration(  icon: const Icon(Icons.color_lens),  labelText: 'Select Account',  ),
+                          isEmpty: _accountName == '',
+                          child: new DropdownButtonHideUnderline(
+                              child: new DropdownButton<Account>(
+                                value: accountObj,
+                                isDense: true,
+                                onChanged: (Account newValue) {
+                                  setState(() {
+                                    accountObj = newValue;
+                                    _accountName = newValue.accountName;
+                                    newTransaction.accountId= newValue.id;
+                                    state.didChange(newValue.accountName);
+                                  });
+                                },
+                                items: accountsList.map((Account account) {
+                                  return new DropdownMenuItem<Account>( value: account, child: new Text(account.accountName),  );
+                                }).toList(),
+                              )
+                          )
+                      );
+                    }
+                  }
+              ),*/
               InkWell(
                   onTap: () {
                     //_chooseDate(context, _controller.text);

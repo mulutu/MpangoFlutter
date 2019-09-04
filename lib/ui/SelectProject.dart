@@ -22,7 +22,7 @@ class _SelectProjectState extends State<SelectProject>{
 
   List<String> _checked = <String>[];
   List<int> _checkedId = <int>[];
-  //String _picked = "Two";
+
 
   List<Project> projectsList = <Project>[];
   List<String> projectNames = <String>[];
@@ -95,65 +95,27 @@ class _SelectProjectState extends State<SelectProject>{
 
   void _submitForm() {
     final FormState form = _formKey.currentState;
-
     if (!form.validate()) {
       showMessage('Form is not valid!  Please review and correct.');
     } else {
-      //form.save(); //This invokes each onSaved event
-
-      print("checked projects: ${_checked.toString()}");
-
       _checkedId.clear();
-
       for (Project pro in projectsList) {
         if(_checked.contains(pro.ProjectName)){
           _checkedId.add(pro.id);
-          print('selected name: ${pro.ProjectName}');
         }
       }
-
       newTransaction.selectedProjects = _checkedId;
-
       print("checked projects IDS: ${_checkedId.toString()}");
       print("TRX checked projects IDS: ${newTransaction.selectedProjects.toString()}");
-
-      print('Form save called, newContact is now up to date...');
-      //print('Amount: ${newTransaction.amount}');
-      //print('Description: ${newTransaction.description}');
-      //print('Date: ${newTransaction.transactionDate}');
-      //print('ProjectId: ${newTransaction.projectId}');
-      //print('AccountId: ${newTransaction.accountId}');
-      //print('UserId: ${newTransaction.userId}');
-      //print('TransactionTypeId: ${newTransaction.transactionTypeId}');
       print('========================================');
       print('Submitting to back end...');
-      print('TODO - we will write the submission part next...');
-
       Navigator.pop(context, newTransaction);
-
-      /*Navigator.push(
-          context,
-          new MaterialPageRoute( builder: (context) => CreateTransactionPage(newTrxObject:newTransaction, ))
-      );*/
-
-      //var transactionService = new TransactionService();
-      //transactionService.createTransaction(newTransaction)
-      //    .then((value) => showMessage('New transaction created for ${value.message}!', Colors.blue)
-      //);
-
-
     }
   }
 
   void showMessage(String message, [MaterialColor color = Colors.red]) {
     print(message);
-    _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(backgroundColor: color, content: new Text(message)));
-
-    //Navigator.push(
-        //context,
-        //new MaterialPageRoute( builder: (context) => HomePage())
-    //);
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(backgroundColor: color, content: new Text(message)));
   }
 
   _showDialog(BuildContext context) {
