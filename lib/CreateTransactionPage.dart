@@ -33,43 +33,16 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
   final TextEditingController _controllerDate = new TextEditingController();
 
   String pageTitle = "";
-
   Project projectObj;
   List<Project> projectsList = <Project>[];
-  //String _projectName = '';
-
   List<Account> accountsList = <Account>[];
-  //String _accountName = '';
   Account accountObj;
-
-  _getProjectsRecords() async {
-    List<Project> projects_ = await ProjectService().fetchProjects();
-    setState(() {
-      for (Project record in projects_) {
-        this.projectsList.add(record);
-      }
-    });
-  }
-
-  _getAccountsRecords() async {
-    List<ChartOfAccounts> accounts_ = await ChartOfAccountsService().fetchChartOfAccounts();
-    setState(() {
-      for (ChartOfAccounts record in accounts_) {
-        List<Account> list = record.listOfAccounts.records;
-        if(list.length > 0 ) {
-          this.accountsList.addAll(list);
-        }
-      }
-    });
-  }
 
   @override
   void initState() {
     super.initState();
     newTransaction = widget.newTrxObject;
     newTransaction.userId = 1;
-    _getProjectsRecords();
-    _getAccountsRecords();
 
     if(newTransaction.transactionTypeId==0){
       pageTitle = "New Income";
@@ -107,7 +80,6 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
               new TextFormField(
                 decoration: const InputDecoration( icon: const Icon(Icons.person), hintText: 'Enter transaction amount', labelText: 'Amount', ),
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                //inputFormatters: [ WhitelistingTextInputFormatter.digitsOnly,  ],
                 validator: (val) => val.isEmpty ? 'Amount is required' : null,
                 onSaved: (val) => newTransaction.amount = double.parse(val), // as double,
                 textInputAction: TextInputAction.next,
@@ -115,10 +87,6 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
               InkWell(
                 onTap: () {
                   _awaitReturnValueFromSelectProjectScreen(context);
-                  /*Navigator.push(
-                    context,
-                    new MaterialPageRoute(builder: (context) => new SelectProject(newTrxObj:newTransaction)),
-                  );*/
                 },
                 child: IgnorePointer(
                   child: new TextFormField(
@@ -127,13 +95,8 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
                       hintText: 'Select Project',
                       labelText: 'Select Project',
                     ),
-                    keyboardType: TextInputType.text,
                     controller: _controllerProjects,
                     textInputAction: TextInputAction.next,
-                    //onChanged: (v)=>setState((){_text=v;}),
-                    //validator: (val) => isValidDob(val) ? null : 'Not a valid name',
-                    //onSaved: (val) => newTransaction.transactionDate = new DateFormat("yyyy-MM-dd").parse(val), // as double,
-                    //onSaved: (val) => newTransaction.transactionDate = new DateFormat.yMd().parse(val),
                   ),
                 )
               ),
@@ -148,19 +111,13 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
                         hintText: 'Select Account',
                         labelText: 'Select Account',
                       ),
-                      keyboardType: TextInputType.text,
                       controller: _controllerAccounts,
                       textInputAction: TextInputAction.next,
-                      //onChanged: (v)=>setState((){_text=v;}),
-                      //validator: (val) => isValidDob(val) ? null : 'Not a valid name',
-                      //onSaved: (val) => newTransaction.transactionDate = new DateFormat("yyyy-MM-dd").parse(val), // as double,
-                      //onSaved: (val) => newTransaction.transactionDate = new DateFormat.yMd().parse(val),
                     ),
                   )
               ),
               InkWell(
                   onTap: () {
-                    //_chooseDate(context, _controller.text);
                     _awaitReturnValueFromSelectDateScreen(context);
                   },
                 child: IgnorePointer(
@@ -172,9 +129,6 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
                       ),
                       keyboardType: TextInputType.datetime,
                       controller: _controllerDate,
-                      validator: (val) => isValidDob(val) ? null : 'Not a valid date',
-                      //onSaved: (val) => newTransaction.transactionDate = new DateFormat("yyyy-MM-dd").parse(val), // as double,
-                      onSaved: (val) => newTransaction.transactionDate = new DateFormat.yMd().parse(val),
                   ),
                 )
               ),
@@ -212,14 +166,10 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
         MaterialPageRoute(
           builder: (context) => SelectAccount(newTrxObj:newTransaction),
         ));
-    // after the SecondScreen result comes back update the Text widget with it
     setState(() {
       newTransaction = result;
       _controllerAccounts.text = newTransaction.accountId.toString();
     });
-
-    print("CREATETRX TRX checked projects IDS: ${newTransaction.transactionDate.toString()}");
-
   }
 
   void _awaitReturnValueFromSelectDateScreen(BuildContext context) async {
@@ -228,14 +178,10 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
         MaterialPageRoute(
           builder: (context) => SelectDate(newTrxObj:newTransaction),
         ));
-    // after the SecondScreen result comes back update the Text widget with it
     setState(() {
       newTransaction = result;
       _controllerDate.text = newTransaction.transactionDate.toString();
     });
-
-    print("CREATETRX TRX checked projects IDS: ${newTransaction.transactionDate.toString()}");
-
   }
 
   void _awaitReturnValueFromSelectProjectScreen(BuildContext context) async {
@@ -244,14 +190,10 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
         MaterialPageRoute(
           builder: (context) => SelectProject(newTrxObj:newTransaction),
         ));
-    // after the SecondScreen result comes back update the Text widget with it
     setState(() {
       newTransaction = result;
       _controllerProjects.text = newTransaction.selectedProjects.toString();
     });
-
-    print("CREATETRX TRX checked projects IDS: ${newTransaction.selectedProjects.toString()}");
-
   }
 
   bool isValidDob(String dob) {
@@ -284,8 +226,6 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
       transactionService.createTransaction(newTransaction)
           .then((value) => showMessage('New transaction created for ${value.message}!', Colors.blue)
       );
-
-
     }
   }
 
