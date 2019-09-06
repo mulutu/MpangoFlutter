@@ -54,6 +54,7 @@ class TransactionService {
 
     //mapData["transactionDate"] = new DateFormat.yMd().format(transaction.transactionDate);
     //mapData["amount"] = new DateFormat.yMd().format(contact.dob);
+
     mapData["transactionDate"] = formatted;
     mapData["amount"] = transaction.amount;
     mapData["accountId"] = transaction.accountId;
@@ -61,6 +62,7 @@ class TransactionService {
     mapData["description"] = transaction.description;
     mapData["userId"] = transaction.userId;
     mapData["transactionTypeId"] = transaction.transactionTypeId;
+    mapData["selectedProjectIds"] = transaction.selectedProjects;
 
     String jsondata = json.encode(mapData);
 
