@@ -4,7 +4,8 @@ import 'DetailsPage.dart';
 import 'package:intl/intl.dart';
 import 'models/TransactionService.dart';
 import 'FloatingButtonsTransactions.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'ui/EditTransactionPage.dart';
 
 class TransactionsPage extends StatelessWidget {
 
@@ -31,13 +32,92 @@ class TransactionsPage extends StatelessWidget {
     var formatter = new DateFormat('yyyy-MM-dd');
     return Container(
       padding: const EdgeInsets.all(5),
+      child:
+      ListView.builder(
+        itemCount: transactions.length,
+        itemBuilder: (context, index) {
+
+          String formatted = formatter.format(transactions[index].transactionDate);
+          var trxType = transactions[index].transactionTypeId;
+
+          return Slidable(
+            key: ValueKey(index),
+            actionPane: SlidableDrawerActionPane(),
+            actionExtentRatio: 0.25,
+            actions: <Widget>[
+              IconSlideAction(
+                caption: 'Archive',
+                color: Colors.blue,
+                icon: Icons.archive,
+              ),
+              IconSlideAction(
+                caption: 'Share',
+                color: Colors.indigo,
+                icon: Icons.share,
+              ),
+            ],
+            secondaryActions: <Widget>[
+              /*IconSlideAction(
+                caption: 'More',
+                color: Colors.grey.shade200,
+                icon: Icons.more_horiz,
+              ),*/
+              IconSlideAction(
+                caption: 'Edit Transaction',
+                color: Colors.indigo,
+                icon: Icons.edit,
+                onTap: () {
+                  _editTransaction(context, transactions[index]);
+                },
+
+              ),
+              IconSlideAction(
+                caption: 'Delete',
+                color: Colors.red,
+                icon: Icons.delete,
+              ),
+            ],
+            dismissal: SlidableDismissal(
+              child: SlidableDrawerDismissal(),
+            ),
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: (trxType==1) ? Colors.red: Colors.green,
+                child:  (trxType==1) ? Text('E'): Text('I') ,
+                foregroundColor: Colors.white,
+              ),
+              title: new Row(
+                  children: <Widget>[
+                    new Expanded(child: new Text('${transactions[index].amount}', textAlign:TextAlign.left, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0,  color:  (trxType==1) ? Colors.red: Colors.green, )), ),
+                    new Expanded(child:new Text('${formatted}', textAlign:TextAlign.right, style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14.0, color: Colors.grey), ), ),
+                  ]
+              ),
+              subtitle: new Container(
+                  padding: const EdgeInsets.only(left: 0, bottom: 5),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(bottom: 1),
+                          child: Text( '${transactions[index].description}', style: TextStyle( fontWeight: FontWeight.bold, fontSize: 15.0,), ),
+                        ),
+                        //Text('${transactions[index].projectName}', style: TextStyle( color: Colors.grey[500], ), ),
+                      ]
+                  )
+              ),
+            ),
+          );
+        },
+      ),
+
+
 
       // test on pull function
       //child: LiquidPullToRefresh(
         //key: _refreshIndicatorKey,	// key if you want to add
         //onRefresh: null,	// refresh callback
 
-        child: ListView.builder(
+        /*child: ListView.builder(
           itemCount: transactions.length,
           itemBuilder: (context, position) {
             String formatted = formatter.format(transactions[position].transactionDate);
@@ -74,12 +154,19 @@ class TransactionsPage extends StatelessWidget {
               )
             );
           }
-        ),
+        ),*/
 
 
       //) // test on pull function
 
 
+    );
+  }
+
+  void _editTransaction(BuildContext context,  Transaction trx){
+    Navigator.push(
+        context,
+        new MaterialPageRoute( builder: (context) => EditTransactionPage(newTrxObject:trx))
     );
   }
 
