@@ -34,6 +34,7 @@ class _EditTransactionState extends State<EditTransactionPage> {
   Project projectObj;
   List<Project> projectsList = <Project>[];
   List<Account> accountsList = <Account>[];
+  List<int> _selectedProjectsIds = <int>[];
   Account accountObj;
 
   @override
@@ -46,6 +47,9 @@ class _EditTransactionState extends State<EditTransactionPage> {
     _controllerAccounts.text = newTransaction.accountId.toString();
     _controllerDate.text = newTransaction.transactionDate.toString();
     _controllerDesc.text = newTransaction.description;
+
+    _selectedProjectsIds.add(newTransaction.projectId);
+    newTransaction.selectedProjects = _selectedProjectsIds;
 
     if(newTransaction.transactionTypeId==0){
       pageTitle = "Edit Income";
@@ -204,6 +208,7 @@ class _EditTransactionState extends State<EditTransactionPage> {
       print('Description: ${newTransaction.description}');
       print('Date: ${newTransaction.transactionDate}');
       print('ProjectId: ${newTransaction.projectId}');
+      print('Selected ProjectIds: ${newTransaction.selectedProjects}');
       print('AccountId: ${newTransaction.accountId}');
       print('UserId: ${newTransaction.userId}');
       print('TransactionTypeId: ${newTransaction.transactionTypeId}');
@@ -212,19 +217,18 @@ class _EditTransactionState extends State<EditTransactionPage> {
       print('TODO - we will write the submission part next...');
 
       var transactionService = new TransactionService();
-      transactionService.createTransaction(newTransaction)
-          .then((value) => showMessage('New transaction created for ${value.message}!', Colors.blue)
-      );
+      transactionService.updateTransaction(newTransaction).then((value) => showMessage('New transaction created for ${value.message}!', Colors.blue));
     }
   }
 
   void showMessage(String message, [MaterialColor color = Colors.red]) {
     print(message);
     _scaffoldKey.currentState.showSnackBar(new SnackBar(backgroundColor: color, content: new Text(message)));
-    Navigator.push(
+    /*Navigator.push(
         context,
         new MaterialPageRoute( builder: (context) => HomePage())
-    );
+    );*/
+    Navigator.pop(context);
   }
 
   _showDialog(BuildContext context) {

@@ -7,9 +7,11 @@ import 'FloatingButtonsTransactions.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'ui/EditTransactionPage.dart';
 
-class TransactionsPage extends StatelessWidget {
-
-  TransactionsPage();
+class TransactionsPage extends StatefulWidget {
+  @override
+  _TransactionsPage createState() => new _TransactionsPage(); //TransactionsPage();
+}
+class _TransactionsPage extends State<TransactionsPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -66,15 +68,14 @@ class TransactionsPage extends StatelessWidget {
                 caption: 'Edit Transaction',
                 color: Colors.indigo,
                 icon: Icons.edit,
-                onTap: () {
-                  _editTransaction(context, transactions[index]);
-                },
+                onTap: () { _editTransaction(context, transactions[index]); },
 
               ),
               IconSlideAction(
                 caption: 'Delete',
                 color: Colors.red,
                 icon: Icons.delete,
+                onTap: () { _deleteTransaction(context, transactions[index]); },
               ),
             ],
             dismissal: SlidableDismissal(
@@ -163,6 +164,12 @@ class TransactionsPage extends StatelessWidget {
     );
   }
 
+  void _deleteTransaction(BuildContext context,  Transaction trx){
+    var transactionService = new TransactionService();
+    transactionService.deleteTransaction(trx).then((value) => showMessage('New transaction delete for ${value.message}!', Colors.blue));
+    setState(() {  });
+  }
+
   void _editTransaction(BuildContext context,  Transaction trx){
     Navigator.push(
         context,
@@ -175,5 +182,11 @@ class TransactionsPage extends StatelessWidget {
     Navigator.push( context, new MaterialPageRoute( builder: (context) => DetailsPage(newTrxObject:transaction))  );
   }
 
+
+  void showMessage(String message, [MaterialColor color = Colors.red]) {
+    print(message);
+    //_scaffoldKey.currentState.showSnackBar(new SnackBar(backgroundColor: color, content: new Text(message)));
+
+  }
 
 }

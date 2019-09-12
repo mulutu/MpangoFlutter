@@ -7,6 +7,7 @@ import 'package:json_annotation/json_annotation.dart';
 @JsonSerializable()
 
 class Transaction{
+  int id;
   int userId;
   int accountId;
   int transactionTypeId;
@@ -18,6 +19,7 @@ class Transaction{
   List<int> selectedProjects = <int>[];
 
   Transaction({
+    this.id,
     this.userId,
     this.accountId,
     this.transactionTypeId,
@@ -35,6 +37,7 @@ class Transaction{
   factory Transaction.fromJson(Map<String, dynamic> json) {
     //var formatter = new DateFormat('yyyy-MM-dd');
     return new Transaction(
+        id: json['id'],
         userId: json['userId'],
         accountId: json['accountId'],
         transactionTypeId: json['transactionTypeId'],

@@ -219,6 +219,7 @@ class _CreateTransactionState extends State<CreateTransactionPage> {
       print('Description: ${newTransaction.description}');
       print('Date: ${newTransaction.transactionDate}');
       print('ProjectId: ${newTransaction.projectId}');
+      print('Selected ProjectIds: ${newTransaction.selectedProjects}');
       print('AccountId: ${newTransaction.accountId}');
       print('UserId: ${newTransaction.userId}');
       print('TransactionTypeId: ${newTransaction.transactionTypeId}');
