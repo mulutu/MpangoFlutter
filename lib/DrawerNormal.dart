@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart' show DragStartBehavior;
-import 'TasksPage.dart';
 import 'helpers/Constants.dart';
 
 class DrawerNormal extends StatelessWidget {

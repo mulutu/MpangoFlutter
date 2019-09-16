@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'models/Project.dart';
-import 'models/ProjectService.dart';
+import 'package:mpango/models/Project.dart';
+import 'package:mpango/models/ProjectService.dart';
+import 'package:mpango/utils/PieChartPage.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter_swiper/flutter_swiper.dart';
 
@@ -163,7 +164,7 @@ class HomePagePieChart extends StatelessWidget {
     return Column(
       children: <Widget>[
         new SizedBox(
-          height: 202.0,
+          height: 350, //202.0,
           child: Container(
             child: PageView(
               reverse: false,
@@ -171,12 +172,41 @@ class HomePagePieChart extends StatelessWidget {
               scrollDirection: true ? Axis.horizontal : Axis.vertical,
               pageSnapping: true,
               children: projects
-                  .map((project) => _buildPageItem(context, project))
+                  .map((project) => _buildPageItemNew(context, project))
                   .toList(),
             ),
           ),
         )
       ],
+    );
+  }
+
+  static Widget _buildPageItemNew(BuildContext context, Project record) {
+    final List<charts.Series> seriesList = _createSampleData(record);
+    return Center(
+        child: Card(
+            elevation: 2.0,
+            child: Container(
+                child: Column(
+                  children: <Widget>[
+                    new Container(height: 4.0),
+                    Container(
+                        child: Text( record.ProjectName, style: TextStyle(fontWeight: FontWeight.w300, fontSize: 17.0), )
+                    ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            flex: 9,
+                            child: PieChartPage()
+                          ),
+                        ]
+                    )
+                  ],
+                )
+            )
+        )
     );
   }
 
