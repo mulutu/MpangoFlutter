@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'models/Project.dart';
-import 'models/Transaction.dart';
-import 'models/Task.dart';
-import 'CreateTransactionPage.dart';
-import 'CreateTaskPage.dart';
+import '../models/Transaction.dart';
+import '../CreateTransactionPage.dart';
 import 'package:unicorndial/unicorndial.dart';
-import 'CreateProjectPage.dart';
 
-class FloatingButtonsProjects extends StatelessWidget {
-  FloatingButtonsProjects();
+class FloatingButtonsTransactions extends StatelessWidget {
+  FloatingButtonsTransactions();
 
   @override
   Widget build(BuildContext context) {
@@ -17,26 +13,27 @@ class FloatingButtonsProjects extends StatelessWidget {
 
     childButtons.add(UnicornButton(
       hasLabel: true,
-      labelText: "+ Task",
+      labelText: "+ Expense",
       currentButton: FloatingActionButton(
-        heroTag: "add_task",
+        heroTag: "add_expense",
         backgroundColor: Colors.redAccent,
         mini: true,
         child: Icon(Icons.train),
         onPressed: () {
-          Task newTask =  new Task();
+          Transaction newTransaction =  new Transaction();
+          newTransaction.transactionTypeId=1;
           Navigator.push(
             context,
-            new MaterialPageRoute( builder: (context) => CreateTaskPage(newTaskObject:newTask))
+            new MaterialPageRoute( builder: (context) => CreateTransactionPage(newTrxObject:newTransaction))
           );
         },
       )));
 
     childButtons.add(UnicornButton(
       hasLabel: true,
-      labelText: "+ Farm",
+      labelText: "+ Income",
       currentButton: FloatingActionButton(
-        heroTag: "add_farm",
+        heroTag: "add_income",
         backgroundColor: Colors.greenAccent,
         mini: true,
         onPressed: () {
@@ -49,21 +46,6 @@ class FloatingButtonsProjects extends StatelessWidget {
         },
         child: Icon(Icons.airplanemode_active))));
 
-    childButtons.add(UnicornButton(
-      hasLabel: true,
-      labelText: "+ Project",
-      currentButton: FloatingActionButton(
-        heroTag: "add_project",
-        backgroundColor: Colors.blueAccent,
-        mini: true,
-        onPressed: () {
-          Project newProject =  new Project();
-          Navigator.push(
-              context,
-              new MaterialPageRoute( builder: (context) => CreateProjectPage(newProjectObject:newProject))
-          );
-        },
-        child: Icon(Icons.directions_car))));
 
     return UnicornDialer(
       backgroundColor: Color.fromRGBO(255, 255, 255, 0.6),

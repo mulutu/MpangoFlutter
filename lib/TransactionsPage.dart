@@ -3,7 +3,7 @@ import 'package:mpango/models/Transaction.dart';
 import 'package:mpango/DetailsPage.dart';
 import 'package:intl/intl.dart';
 import 'package:mpango/models/TransactionService.dart';
-import 'package:mpango/FloatingButtonsTransactions.dart';
+import 'package:mpango/utils/FloatingButtonsTransactions.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mpango/ui/EditTransactionPage.dart';
 import 'package:extended_tabs/extended_tabs.dart';
@@ -31,11 +31,12 @@ class _TransactionsPage extends State<TransactionsPage>
       body: Column(
         children: <Widget>[
           TabBar(
-            indicator: ColorTabIndicator(Colors.blue),
+            unselectedLabelColor: Colors.teal,
+            //indicator: ColorTabIndicator(Colors.white),
             labelColor: Colors.black,
             tabs: [
-              Tab(text: "Incomes"),
-              Tab(text: "Expenses"),
+              Tab(text: "Incomes", ),
+              Tab(text: "Expenses",),
             ],
             controller: tabController,
           ),

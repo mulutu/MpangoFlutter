@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'HomePage.dart';
-import 'ui/LoginPage.dart';
-import 'TasksPage.dart';
-import 'CreateTransactionPage.dart';
-import 'helpers/Constants.dart';
+import 'package:mpango/HomePage.dart';
+import 'package:mpango/ui/LoginPage.dart';
+import 'package:mpango/TasksPage.dart';
+import 'package:mpango/CreateTransactionPage.dart';
+import 'package:mpango/helpers/Constants.dart';
 import 'dart:typed_data';
 import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;

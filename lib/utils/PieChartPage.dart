@@ -11,7 +11,6 @@ class PieChartPage extends StatefulWidget {
   PieChartPage({this.projectObj});
 
   @override
-  //State<StatefulWidget> createState() => _PieChartPage();
   _PieChartPage createState() => new _PieChartPage();
 }
 

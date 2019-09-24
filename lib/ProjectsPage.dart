@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'models/Project.dart';
 import 'models/ProjectService.dart';
-import 'FloatingButtonsProjects.dart';
+import 'utils/FloatingButtonsProjects.dart';
 
 class ProjectsPage extends StatelessWidget {
 
