@@ -15,8 +15,12 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage>
     with TickerProviderStateMixin {
+
   List<Task> tasks = <Task>[];
   List<Task> tasksToday = <Task>[];
+
+  double screenSize;
+  double screenRatio;
 
   //List<Tab> tabList = List();
   TabController tabController;
@@ -44,7 +48,7 @@ class _DashboardPageState extends State<DashboardPage>
     super.dispose();
   }
 
-  @override
+  /*@override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
@@ -58,36 +62,57 @@ class _DashboardPageState extends State<DashboardPage>
       ),
       //floatingActionButton: FloatingButtons(),
     );
+  }*/
+
+  @override
+  Widget build(BuildContext context) {
+
+    screenSize = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+        body: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              new Positioned(
+                width: screenSize,
+                top: 0,
+                child: pieCharts,
+              ),
+              new Positioned(
+                width: screenSize,
+                top: 300,
+                child: tasksList(context)
+              )
+            ]
+        )
+    );
+
   }
 
   Widget tasksList(BuildContext context) {
-    return SizedBox(
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
       child: new Column(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           new Text("Your Tasks"),
           new Container(
-            decoration:
-                new BoxDecoration(color: Theme.of(context).primaryColor),
-            //decoration: new BoxDecoration(color: Colors.red),
-            //padding: const EdgeInsets.all(5),
-            margin: const EdgeInsets.all(5),
+            decoration: new BoxDecoration(color: Theme.of(context).primaryColor),
             child: new TabBar(
               controller: tabController,
               indicatorColor: Colors.pink,
               indicatorSize: TabBarIndicatorSize.tab,
               tabs: [
-                Tab(
-                  text: "TODAY",
-                ),
-                Tab(
-                  text: "TOP 5",
-                ),
+                Tab( text: "TODAY",  ),
+                Tab( text: "TOP 5", ),
               ],
             ),
           ),
           new Container(
-
-            margin: const EdgeInsets.all(5),
+            constraints: BoxConstraints.expand(
+              height: Theme.of(context).textTheme.display1.fontSize * 1.1 + 120.0,
+            ),
+            //height: 120,
             child: new TabBarView(
               controller: tabController,
               children: <Widget>[
@@ -95,7 +120,8 @@ class _DashboardPageState extends State<DashboardPage>
                 allTask(context),
               ],
             ),
-          )
+          ),
+
         ],
       ),
     );
@@ -106,40 +132,53 @@ class _DashboardPageState extends State<DashboardPage>
       _getTasksRecords();
     }
 
-    for (Task task in tasks) {
-      DateTime taskDate = task.taskDate;
-      DateTime today = DateTime.now();
-
-      int diffDays = taskDate.compareTo(today);
-      bool isSame = (diffDays == 0);
-
-      if (isSame) {
-        tasksToday.add(task);
+    if (tasks != null && tasks.length > 0) {
+      for (Task task in tasks) {
+        DateTime taskDate = task.taskDate;
+        DateTime today = DateTime.now();
+        int diffDays = taskDate.compareTo(today);
+        bool isSame = (diffDays == 0);
+        if (isSame) {
+          tasksToday.add(task);
+        }
       }
+    }
+
+    if (tasksToday.length == 0) {
+      return Container(
+          constraints: BoxConstraints.expand(
+            height: Theme.of(context).textTheme.display1.fontSize * 1.1 + 100.0,
+          ),
+          child: Card(
+              child: new Text("No Tasks")
+          ),
+      );
     }
 
     return Container(
         constraints: BoxConstraints.expand(
           height: Theme.of(context).textTheme.display1.fontSize * 1.1 + 100.0,
         ),
-        child: ListView.builder(
-            itemCount: tasksToday.length,
-            //padding: const EdgeInsets.all(5),
-            itemBuilder: (context, position) {
-              return ListTile(
-                title: Text(
-                  '${tasksToday[position].taskName}',
-                ),
-                subtitle: Text(
-                  '${tasksToday[position].taskName}',
-                ),
-                trailing: Icon(Icons.keyboard_arrow_right),
-              );
-            }
+        child: Card(
+          child: ListView.builder(
+              itemCount: tasksToday.length,
+              //padding: const EdgeInsets.all(5),
+              shrinkWrap: true,
+              itemBuilder: (context, position) {
+                return ListTile(
+                  title: Text(
+                    '${tasksToday[position].taskName}',
+                  ),
+                  subtitle: Text(
+                    '${tasksToday[position].taskName}',
+                  ),
+                  trailing: Icon(Icons.keyboard_arrow_right),
+                );
+              })
         )
+
     );
   }
-
 
   Widget allTask(BuildContext context) {
     if (tasks == null) {
@@ -147,21 +186,27 @@ class _DashboardPageState extends State<DashboardPage>
     }
 
     return Container(
-        child: ListView.builder(
-            itemCount: tasks.length,
-            //padding: const EdgeInsets.all(5),
-            itemBuilder: (context, position) {
-              return ListTile(
-                title: Text(
-                  '${tasks[position].taskName}',
-                ),
-                subtitle: Text(
-                  '${tasks[position].taskName}',
-                ),
-                trailing: Icon(Icons.keyboard_arrow_right),
-              );
-            }
+        constraints: BoxConstraints.expand(
+        height: Theme.of(context).textTheme.display1.fontSize * 1.1 + 150.0,
+        ),
+        child: Card(
+            child: ListView.builder(
+                itemCount: tasks.length,
+                //padding: const EdgeInsets.all(5),
+                shrinkWrap: true,
+                itemBuilder: (context, position) {
+                  return ListTile(
+                    title: Text(
+                      '${tasks[position].taskName}',
+                    ),
+                    subtitle: Text(
+                      '${tasks[position].taskName}',
+                    ),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                  );
+                })
         )
+
     );
   }
 
