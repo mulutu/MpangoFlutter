@@ -7,10 +7,17 @@ import 'package:mpango/helpers/Constants.dart';
 import 'dart:typed_data';
 import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:timezone/timezone.dart';
+import 'package:mpango/ui/login/LoginScreen.dart';
+import 'package:redux/redux.dart';
+import 'package:redux_thunk/redux_thunk.dart';
+import 'package:mpango/models/redux/reducers/AppReducer.dart';
+import 'package:mpango/AppState.dart';
+import 'package:mpango/models/navigation/navigation.dart';
+//import 'screens/home//home_screen.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
-//void main() => runApp(MpangoApp());
+
 void main() async {
   //debugPrint = (String message, {int wrapWidth}) {};
   ByteData loadedData;
@@ -21,13 +28,13 @@ void main() async {
   runApp(new MpangoApp());
 }
 
-/*void main() async {
-  var byteData = await rootBundle.load('assets/timezone/${tzDataDefaultFilename}');
-  initializeDatabase(byteData.buffer.asUint8List());
-  runApp(new MpangoApp());
-}*/
-
 class MpangoApp extends StatelessWidget{
+
+  final store = Store<AppState>(
+      appReducer,
+      initialState: new AppState.initial(),
+      middleware: [thunkMiddleware]
+  );
 
   final routes = <String, WidgetBuilder>{
     loginPageTag: (context) => LoginPage(),
@@ -38,6 +45,27 @@ class MpangoApp extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    return StoreProvider(
+      store: store,
+      child: MaterialApp(
+        title: appTitle,
+        navigatorKey: Keys.navKey,
+        debugShowCheckedModeBanner: false,
+        theme: new ThemeData(
+          primarySwatch: Colors.teal,
+        ),
+        home: LoginScreen(title: 'Log in'),
+        routes: {
+          Routes.homeScreen: (context) {
+            return HomePage();
+          },
+        },
+      ),
+    );
+  }
+
+  /*@override
+  Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         localizationsDelegates: const <LocalizationsDelegate<MaterialLocalizations>>[
@@ -45,16 +73,17 @@ class MpangoApp extends StatelessWidget{
         ],
         supportedLocales: const <Locale>[
           const Locale('en', ''),
-          const Locale('fr', ''),
+          //const Locale('fr', ''),
         ],
         title: appTitle,
         theme: new ThemeData(
           //primaryColor: appDarkGreyColor,
           primarySwatch: Colors.teal,
         ),
-        home: LoginPage(),
+        //home: LoginPage(),
+        home: LoginScreen(title: 'Log in'),
         routes: routes,
     );
-  }
+  }*/
 
 }

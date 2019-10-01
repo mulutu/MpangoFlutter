@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:grouped_buttons/grouped_buttons.dart';
-import 'package:mpango/models/Project.dart';
-import 'package:mpango/models/ProjectService.dart';
 import 'package:mpango/models/Transaction.dart';
-import 'package:mpango/CreateTransactionPage.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel;
 import 'package:flutter_calendar_carousel/classes/event.dart';
-import 'package:flutter_calendar_carousel/classes/event_list.dart';
-import 'package:intl/intl.dart' show DateFormat;
 
 class SelectDate extends StatefulWidget {
   var newTrxObj;
@@ -16,8 +10,6 @@ class SelectDate extends StatefulWidget {
   @override
   _SelectDateState createState() => new _SelectDateState();
 }
-
-
 
 class _SelectDateState extends State<SelectDate>{
 
@@ -41,16 +33,12 @@ class _SelectDateState extends State<SelectDate>{
     ),
   );
 
-
-
-
   @override
   void initState() {
     super.initState();
     newTransaction = widget.newTrxObj;
     //_getProjectsRecords();
   }
-
 
   @override
   Widget build(BuildContext context){
@@ -63,7 +51,6 @@ class _SelectDateState extends State<SelectDate>{
     );
     //
   }
-
 
   Widget widget_() {
     return Container(
