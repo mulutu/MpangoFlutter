@@ -1,11 +1,13 @@
 import 'package:meta/meta.dart';
 import 'package:mpango/models/login/LoginResponse.dart';
+import 'package:mpango/models/User.dart';
 
 @immutable
 class UserState {
   final bool isLoading;
   final bool loginError;
-  final LoginResponse user;
+  //final LoginResponse user;
+  final User user;
 
   UserState({
     @required this.isLoading,
@@ -17,7 +19,8 @@ class UserState {
     return new UserState(isLoading: false, loginError: false, user: null);
   }
 
-  UserState copyWith({bool isLoading, bool loginError, LoginResponse user}) {
+  UserState copyWith({bool isLoading, bool loginError, User user}) {
+  //UserState copyWith({bool isLoading, bool loginError, LoginResponse user}) {
     return new UserState(
         isLoading: isLoading ?? this.isLoading, loginError: loginError ?? this.loginError, user: user ?? this.user);
   }

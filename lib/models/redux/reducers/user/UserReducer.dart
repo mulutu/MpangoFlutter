@@ -1,6 +1,7 @@
 import 'package:redux/redux.dart';
 import 'package:mpango/models/redux/state/user/UserState.dart';
 import 'package:mpango/models/redux//actions/login/LoginActions.dart';
+//import 'package:mpango/models/User.dart';
 
 final userReducer = combineReducers<UserState>([
   TypedReducer<UserState, LoginSuccessAction>(_loginSuccess),
