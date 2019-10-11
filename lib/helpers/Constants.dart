@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 // Colors
 Color appDarkGreyColor = Color.fromRGBO(58, 66, 86, 1.0);
@@ -21,3 +22,9 @@ const loginPageTag = 'Login Page';
 const homePageTag = 'Home Page';
 const createTransactionPageTag = 'Create Transaction Page';
 const userTasksPageTag = 'User Tasks Page';
+
+const _API_KEY = "somerandomkey";
+const HEADERS = {HttpHeaders.contentTypeHeader: 'application/json'}; //{'Content-Type': 'application/json'};
+const BASE_URL = "http://45.56.73.81:8084/Mpango/api/v1/";
+
+const LOGIN_URL = BASE_URL + "/login";

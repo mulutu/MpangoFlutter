@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:io';
+import 'package:mpango/helpers/Constants.dart';
 
 Future<User> login(String username, String password) async {
   User user = new User(username, password, "", false, 0, "", "");
@@ -13,8 +14,8 @@ Future<User> login(String username, String password) async {
       return Future.error(error);
     } else {
       final response_ = await http.post(
-          'http://45.56.73.81:8084/Mpango/api/v1/users/login',
-          headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+          LOGIN_URL,
+          headers: HEADERS,
           body: _toJson(user));
       final String res = response_.body;
       final int statusCode = response_.statusCode;
